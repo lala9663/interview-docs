@@ -1,0 +1,80 @@
+# 반입 체크리스트
+
+> 다루는 것: 외부에서 만든 세 레포를 사내로 들여갈 때 챙길 것, 들어간 뒤 사내 자원에 붙이는 순서.
+>
+> 한 번 들어가면 다시 꺼낼 수 없다. **반입 전에** 1장을 끝낸다.
+
+## 1. 반입 전 (외부에서)
+
+### 코드와 문서
+
+- [ ] 세 레포 각각 확인 명령 통과: frontend `npm run check`, backend `./gradlew build`, agent `pytest`
+- [ ] fake AI로 처음부터 끝까지 한 번: 업로드 → 매칭 → 사전 리포트 → 면접 방(전사·꼬리질문) → 종료 → 초안 보고서 → 보정본
+- [ ] 세 레포의 `docs/contract/api-contract.md`가 서로 같고 이 폴더의 `03-api-contract.md`와 같다
+- [ ] 이 `docs/` 폴더를 함께 넣는다(권장: backend 레포의 `docs/project/` 또는 사내 위키)
+- [ ] 레포에 실제 개인정보, 외부 서비스 키, 외부 주소가 없다(시드·모의 데이터는 모두 가상의 인물)
+- [ ] 외부 전용 코드가 없다(외부 LLM 서비스용 provider 등). agent의 provider 목록 확인
+
+### 의존성 (사내에는 인터넷이 없다)
+
+- [ ] **frontend**: `package-lock.json` 포함. 사내 npm 미러에 모든 패키지·버전이 있는지 목록으로 확인(`npm ls --all`). 글꼴(Pretendard)은 npm 패키지로 번들돼 있어 CDN이 필요 없다
+- [ ] **backend**: Gradle wrapper(`gradlew`, `gradle/wrapper/`) 포함. 사내에서 Gradle 7.5.1 배포본을 받을 주소로 `gradle-wrapper.properties`의 `distributionUrl`을 바꿔야 할 수 있다. 의존성 목록(`./gradlew dependencies`)을 사내 Maven 미러와 대조
+- [ ] **agent**: `requirements.txt`(고정 버전) 포함. 사내 pip 미러와 대조. 무거운 패키지(torch 등)는 쓰지 않는다
+- [ ] 사내 미러에 없는 것이 있으면 반입 전에 대체하거나 반입 신청 목록에 넣는다
+
+### 반입 신청에 필요한 정보
+
+- [ ] 세 레포의 오픈소스 라이선스 목록(패키지 관리 도구로 추출)
+- [ ] 서버 자원 요청 근거: [02-architecture.md](02-architecture.md) 4장, agent `docs/concurrency.md`
+
+## 2. 반입 직후 (사내, 아직 사내 자원에 붙이기 전)
+
+- [ ] 세 레포를 사내 Git에 올리고 `main` 보호 규칙(직접 푸시 금지, 확인 명령 통과 필수)을 건다
+- [ ] 각 레포 루트에서 OpenCode를 열어 `AGENTS.md`와 skill이 읽히는지 확인("이 레포의 skill 목록을 알려 줘")
+- [ ] 사내 미러로 의존성 설치: `npm ci` / `./gradlew build` / `pip install -r requirements.txt`
+- [ ] fake 설정 그대로 세 서비스를 띄워 1장의 "처음부터 끝까지"를 사내 PC에서 다시 확인
+
+## 3. 사내 자원에 붙이기 (권장 순서)
+
+한 번에 하나씩 바꾸고, 바꿀 때마다 처음부터 끝까지 돌려 본다. 순서는 "위험이 작고 다른 것의 전제가 되는 것부터".
+
+| 순서 | 붙일 것 | 레포 | 문서 | 확인할 것 |
+| --- | --- | --- | --- | --- |
+| 1 | Oracle | backend | `docs/database.md` | 스키마 생성(`db/oracle/schema.sql`), 한글·CLOB 저장, 시퀀스 권한 |
+| 2 | Redis(Sentinel) | backend, agent | 각 `docs/` | 토큰 저장, 방 이벤트가 agent 두 대 사이에 중계되는지 |
+| 3 | 사내 LLM | agent | `docs/providers.md` | 주소·인증 헤더·모델 이름, 한국어 출력, JSON 형식 출력이 되는지, 응답 시간, 동시 호출 한도 |
+| 4 | 사내 Whisper large-v3 | agent | `docs/providers.md`, `docs/audio-pipeline.md` | 요청 형식(파일 형식, 필드 이름), 응답에 구간 시각·화자 정보가 있는지, 30초 음성의 처리 시간, 동시 호출 한도 |
+| 5 | AD SSO | backend, frontend | 각 `docs/auth.md` | 로그인 흐름, 사번·이름·부서 매핑, 관리자 권한을 주는 방법 |
+| 6 | 실제 엑셀(마스킹 샘플) | backend | `docs/excel-upload.md` | 컬럼 이름을 `excel-mapping.yml`에 맞추기, 블라인드 컬럼 표시, DRM 해제본으로 올리기 |
+| 7 | 블라인드·금지 질문 기준(현업 제공) | backend, agent | agent `docs/blind-rules.md` | 기준을 YAML에 반영, 검수 스크립트 |
+| 8 | 배포(PaaS, Jenkins) | 세 레포 | - | HTTPS(마이크는 HTTPS에서만), WebSocket 프록시, 환경변수 주입 |
+
+### 3·4번(모델)을 붙인 뒤 꼭 재야 하는 것
+
+fake로는 알 수 없는 값들이다. 결과에 따라 설정값과 서버 수가 정해진다.
+
+- [ ] 말이 끝난 뒤 확정 전사가 화면에 뜨기까지의 시간(목표: 수 초 이내)
+- [ ] 답변이 끝난 뒤 꼬리질문이 뜨기까지의 시간
+- [ ] 방 20개를 동시에 돌렸을 때 위 두 값과 큐 깊이(agent `scripts/load_test.py`를 실제 provider로)
+- [ ] 신입 보고서(`BRIEF`)가 1~2분 안에 나오는지
+- [ ] 화자 판정 정확도: 실제(동의받은) 면접 녹음 몇 건으로 agent `scripts/eval_speaker.py` 방식의 측정
+- [ ] 질문 자동 매칭의 정확도와 임계값
+
+### 운영 전 보안 점검
+
+- [ ] 모든 비밀값을 환경변수로 교체(JWT 키, `INTERNAL_API_KEY`, `ROOM_TICKET_SECRET`, DB·Redis 비밀번호, 모델 API 키). 레포의 개발용 기본값이 운영에 남아 있지 않은지
+- [ ] backend의 개발용 로그인(`/auth/dev-login`)이 운영 프로파일에서 닫혀 있는지
+- [ ] agent의 내부 API(`/internal/v1`)가 사내망 안에서 backend만 부를 수 있는지
+- [ ] 개인정보 컬럼 암호화(KMS) 적용 여부 결정과 반영
+- [ ] 녹음 보관 정책 확정(기본: 보관 안 함)과 지원자 동의 문구
+
+## 4. 현업에 받아야 하는 것
+
+[05-open-questions.md](05-open-questions.md)에 질문 목록과 답에 따라 바꿀 위치가 있다. 반입 일정에 영향을 주는 것:
+
+- 신입 면접 대상자 엑셀의 실제 포맷(마스킹 샘플)
+- 블라인드·금지 질문 기준
+- 평가 항목과 채용 시스템 입력 화면 캡처
+- Knox Teams 음성·자막 API 가능 여부
+- PT 면접과 인성 면접의 진행 방식(동시 / 차수)
+- 면접 방의 마이크 구성(한 대 / 지원자용·면접관용 분리)
