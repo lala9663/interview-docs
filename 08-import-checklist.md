@@ -11,7 +11,7 @@
 - [ ] 세 레포 각각 확인 명령 통과: frontend `npm run check`, backend `./gradlew build`, agent `pytest`
 - [ ] fake AI로 처음부터 끝까지 한 번: 업로드 → 매칭 → 사전 리포트 → 면접 방(전사·꼬리질문) → 종료 → 초안 보고서 → 보정본
 - [ ] 세 레포의 `docs/contract/api-contract.md`가 서로 같고 이 폴더의 `03-api-contract.md`와 같다
-- [ ] 이 `docs/` 폴더를 함께 넣는다(권장: backend 레포의 `docs/project/` 또는 사내 위키)
+- [ ] 이 `docs/` 폴더(별도 git 레포)를 함께 넣는다. 사내 레포를 3개로 유지해야 하면 backend 레포의 `docs/project/`로 옮기거나 사내 위키에 올린다
 - [ ] 레포에 실제 개인정보, 외부 서비스 키, 외부 주소가 없다(시드·모의 데이터는 모두 가상의 인물)
 - [ ] 외부 전용 코드가 없다(외부 LLM 서비스용 provider 등). agent의 provider 목록 확인
 
