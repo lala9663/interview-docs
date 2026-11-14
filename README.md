@@ -23,6 +23,7 @@ interview/
 | 7 | [07-legacy-porting-guide.md](07-legacy-porting-guide.md) | 기존 사내 코드(Python + Vue)의 기능을 가져오는 절차, 기능 대응표 |
 | 8 | [08-import-checklist.md](08-import-checklist.md) | 반입 전·후 체크리스트, 사내 자원에 붙이는 순서 |
 | 9 | [09-backlog.md](09-backlog.md) | 기능 후보 목록: 면접관·현업 입장에서 더 필요한 것, 우선순위 |
+| 10 | [10-roadmap.md](10-roadmap.md) | 개발 일정: 주별 목표, 세 명의 담당, 주간 흐름, 일정을 바꾸는 방법. 매주 바뀐다 |
 
 ## 처음 온 사람
 
