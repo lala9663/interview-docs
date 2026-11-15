@@ -19,7 +19,7 @@ interview/
 | 3 | [03-api-contract.md](03-api-contract.md) | REST · WebSocket · 내부 API의 정확한 모양(원본) |
 | 4 | [04-speaker-separation.md](04-speaker-separation.md) | Whisper에 화자분리가 없을 때의 대응책과 측정 결과 |
 | 5 | [05-open-questions.md](05-open-questions.md) | 현업 확인이 필요한 것, 가정으로 만든 것, 답이 오면 바꿀 위치 |
-| 6 | [06-collaboration.md](06-collaboration.md) | 3명 trunk-based 규칙, 계약 변경 절차, OpenCode 사용법과 skill 목록 |
+| 6 | [06-collaboration.md](06-collaboration.md) | 3명 브랜치 규칙(`dev` + `main`), 계약 변경 절차, OpenCode 사용법과 skill 목록 |
 | 7 | [07-legacy-porting-guide.md](07-legacy-porting-guide.md) | 기존 사내 코드(Python + Vue)의 기능을 가져오는 절차, 기능 대응표 |
 | 8 | [08-import-checklist.md](08-import-checklist.md) | 반입 전·후 체크리스트, 사내 자원에 붙이는 순서 |
 | 9 | [09-backlog.md](09-backlog.md) | 기능 후보 목록: 면접관·현업 입장에서 더 필요한 것, 우선순위 |
@@ -45,4 +45,5 @@ interview/
 ## 지금 상태
 
 - 외부 개발 환경에서 **fake AI**(가짜 LLM·STT)로 전체 흐름이 돈다. 실제 사내 LLM·Whisper·Oracle·Redis Sentinel·AD SSO는 사내에서 설정을 바꿔 붙인다(08).
+- 개인정보 암호화(KMS)는 아직 없다. 적용 방식이 나오면 6주 차에 붙인다(10).
 - AI 결과의 **품질**은 실제 모델을 붙인 뒤에 검증한다. fake는 모양과 흐름만 맞춘다.

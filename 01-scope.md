@@ -71,10 +71,10 @@
 | AD 인증 | 인증 방식 인터페이스. 지금은 개발용 로그인 + JWT | backend `docs/auth.md` |
 | 반입 후 OpenCode로만 작업 | 레포마다 `AGENTS.md`와 `.opencode/skills` | [06-collaboration.md](06-collaboration.md) |
 | 레포 3개 | frontend / backend / agent | [02-architecture.md](02-architecture.md) |
-| 3명이 동시 작업(trunk-based) | 기능 단위 폴더, 계약 문서, 작은 PR | [06-collaboration.md](06-collaboration.md) |
+| 3명이 동시 작업(`dev` + `main`) | 기능 단위 폴더, 계약 문서, 작은 PR | [06-collaboration.md](06-collaboration.md) |
 | 화자분리 대응 | 판정 체인 구현 + 측정 스크립트 | [04-speaker-separation.md](04-speaker-separation.md) |
 | 기존 사내 코드의 기능 이식 | 판단 절차와 skill | [07-legacy-porting-guide.md](07-legacy-porting-guide.md) |
-| 녹음 파일 | 기본은 저장하지 않음(메모리 → 사후 STT → 폐기). 저장 방식으로 바꿀 수 있는 자리 있음 | agent `docs/audio-pipeline.md` |
+| 녹음 파일 | 기본은 저장하지 않음(메모리 → 사후 STT → 폐기. 사후 STT가 실패하면 최대 30분 들고 다시 시도한 뒤 폐기). 저장 방식으로 바꿀 수 있는 자리 있음 | agent `docs/audio-pipeline.md` |
 
 ## 5. 하지 않는 것
 

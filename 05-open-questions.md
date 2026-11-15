@@ -9,7 +9,7 @@
 | # | 질문 | 지금의 가정 | 답이 오면 고칠 곳 |
 | --- | --- | --- | --- |
 | 1 | PT 면접과 인성 면접은 동시에(한 자리에서) 보는가, 1차·2차로 따로 보는가 | **서로 다른 면접(차수)** 으로 등록한다. 방도 따로. 자동 매칭은 신입에게 PT → 인성 두 건을 만든다 | 동시라면: backend `app.matching.*`(한 건만 만들기), frontend 면접 방에 유형 전환 추가, 평가 항목을 한 면접에 두 묶음으로 |
-| 2 | 신입 면접 대상자 엑셀의 실제 열 이름과 항목(마스킹 샘플) | 수험번호, 성명, 지원직무코드, 지원직무명, 최종학력, 학교명, 전공, 학점, 주요수강과목, 자기소개서1~3, 프로젝트경험, 경력사항, 자격증, 어학, 수상경력. 첫 시트, 1행이 열 이름 | backend `src/main/resources/excel-mapping.yml`(코드 수정 없음) |
+| 2 | 신입 면접 대상자 엑셀의 실제 열 이름과 항목(마스킹 샘플). 11/11에 요청했고 11/18 회의 전에 받기로 했다 | 수험번호, 성명, 지원직무코드, 지원직무명, 최종학력, 학교명, 전공, 학점, 주요수강과목, 자기소개서1~3, 프로젝트경험, 경력사항, 자격증, 어학, 수상경력. 첫 시트, 1행이 열 이름 | backend `src/main/resources/excel-mapping.yml`(코드 수정 없음) |
 | 3 | 블라인드 처리할 항목과 금지 질문 기준 | 성별, 생년월일, 나이, 가족사항, 사진, 주소, 출신지역은 저장하지 않는다. 금지 주제 9개(성별, 나이, 가족, 결혼·출산, 출신 지역, 종교, 정치, 신체 조건, 재산)는 요약·질문·보고서에서 검사한다 | backend `excel-mapping.yml`의 `blind: true`, agent `config/blind_rules.yaml` |
 | 4 | 엑셀의 DRM | 해제된 파일이 올라온다. 못 여는 파일은 DRM 가능성을 안내하는 오류로 답한다 | 서버에서 해제해야 하면 backend `upload`에 해제 단계 추가(서버 도메인·IP 기준 권한 신청) |
 | 5 | 면접관 ↔ 면접자 매칭 데이터가 어떻게 오는가 | 임시로 **직무 코드 기준 자동 매칭**(면접관의 담당 직무 = 면접자의 지원 직무, 배정이 적은 사람부터, 면접마다 2명) | 매칭 엑셀이 오면 backend에 `InterviewerMatcher` 구현 추가 + 업로드 통로 |
@@ -19,7 +19,7 @@
 | 9 | 평가 항목과 등급 체계, 채용 시스템 입력 화면(캡처) | 트랙·유형별 4개 항목, 5점 만점, 등급은 A~D(자유 문자열 저장). 평가 내용을 한 덩어리 글로 복사 | backend 평가 항목 데이터, frontend `MyEvaluationPanel.vue` |
 | 10 | 보고서 양식(신입 간단 / 경력 상세의 항목) | 신입: 한 줄 총평, 코멘트, 강점, 우려, 주요 문답. 경력: 여기에 역량별 분석, 이력 확인, 다음 차수 확인점, 리스크 | 계약 4.3의 `ReportContent`, agent `report` 그래프·프롬프트, frontend `ReportView.vue` |
 | 11 | 사후 STT 보정본을 기다릴 수 있는가(신입은 1~2분 안에 등급 입력) | 초안을 먼저 보여 주고 보정본이 오면 자동으로 바꾼다. 평가 화면은 초안 상태에서도 쓸 수 있다 | - |
-| 12 | 녹음 파일 보관 | **저장하지 않는다.** 방 음성은 메모리에 모아 사후 STT 뒤 지운다 | 보관으로 바뀌면 agent `AUDIO_RETENTION=KEEP`, `AUDIO_STORE=file`(구현돼 있고 꺼져 있다. 암호화 함수는 자리만), frontend `VITE_AUDIO_KEEP=true`, 지원자 동의 문구 |
+| 12 | 녹음 파일 보관 | **저장하지 않는다.** 방 음성은 메모리에 모아 사후 STT 뒤 지운다. 사후 STT가 실패하면 다시 시도하려고 메모리에 최대 30분 더 들고 있다가 지운다. 이 30분이 괜찮은지도 함께 확인한다 | 30분을 바꾸려면 agent `LIVE_POST_STT_HOLD_MINUTES`(0이면 실패 즉시 지움). 보관으로 바뀌면 agent `AUDIO_RETENTION=KEEP`, `AUDIO_STORE=file`(구현돼 있고 꺼져 있다. 암호화 함수는 자리만), frontend `VITE_AUDIO_KEEP=true`, 지원자 동의 문구 |
 | 13 | 전사·보고서의 보관 기간과 삭제 절차 | 없다(계속 보관) | backend에 삭제 기능 추가 |
 | 14 | 면접관이 배정되지 않은 면접자의 정보·보고서를 볼 수 있어도 되는가 | 조회는 로그인한 사용자 모두 가능. 쓰기는 배정된 면접관과 관리자만 | backend `InterviewAccess`에 조회 검사 추가 |
 | 15 | 면접이 "완료"되는 조건 | 배정된 면접관이 모두 평가를 제출하면 완료 | backend `EvaluationService.completeIfAllSubmitted` |
@@ -35,7 +35,7 @@
 | 20 | 사내 LLM / DS API Hub | 임베딩 모델이 있는가 | 없다. 질문 매칭은 문자 기반 유사도 | agent `EmbeddingProvider` 구현 추가 |
 | 21 | 인증 | AD SSO 방식(SAML / OIDC 등), 사번·이름·부서·역할을 어디서 받는가 | 미정. 개발용 로그인만 동작한다. **지금은 dev/prod 프로파일에 로그인 수단이 없다** | backend `AdSsoAuthProvider`, frontend 로그인 화면 (각 `docs/auth.md`) |
 | 22 | 인프라 | Oracle 버전, Redis Sentinel 접속 정보, 로드밸런서의 WebSocket 지원과 경로 기준 분배, 서버 메모리 | Oracle 12c 이상. agent 여러 대일 때 같은 방은 같은 서버로 가는 것을 권장 | backend `docs/database.md`, agent `docs/concurrency.md` |
-| 23 | 인프라 / 보안 | 개인정보 컬럼 암호화(KMS) 적용 범위 | 적용하지 않았다 | backend 컬럼 변환기 |
+| 23 | 보안 / KMS 담당 | 개인정보 암호화(KMS)를 쓰는 방식, 같은 값이 같은 암호문이 되는지, 암호화할 항목의 기준 | 적용하지 않았다. 방식이 나오면 6주 차에 붙인다([10-roadmap.md](10-roadmap.md)). 그때까지 개발 DB에는 마스킹 샘플·가상 데이터만 넣는다 | backend 컬럼 변환기(아직 없음), 이름 검색(`CandidateService`) |
 | 24 | PaaS | 배포 방식(Jenkins), HTTPS, 환경변수 주입 | 미정. 마이크는 HTTPS에서만 동작한다 | [08-import-checklist.md](08-import-checklist.md) |
 
 ## 3. 실제로 확인하지 못한 것
