@@ -16,7 +16,8 @@
   | `interview-agent` | AI와 음성(전사, 화자 구분, 꼬리질문, 평가, 보고서) | Python 3.12, FastAPI, LangGraph |
 
   경계는 두 줄로 기억한다: **DB는 backend만 만진다. AI는 agent만 부른다.** → [02-architecture.md](02-architecture.md)
-- **지금 상태**: 가짜 AI(fake)로 전체 흐름이 끝까지 돈다. 사내 DB, 사내 LLM·Whisper, AD SSO, 개인정보 암호화는 아직 붙이지 않았다. AI 결과의 품질은 실제 모델을 붙인 뒤에 본다.
+- **API 명세**: 세 레포가 서로 주고받는 주소와 값의 이름·모양을 적은 문서다([03-api-contract.md](03-api-contract.md)). 화면, 백엔드, agent를 따로 만들어도 맞물리는 것은 모두가 이 문서대로 만들기 때문이다. 원본 하나와 세 레포의 복사본(`docs/contract/api-contract.md`)이 있고 네 개가 항상 같아야 한다. 파일 이름과 skill 이름에는 예전 이름인 contract가 남아 있다.
+- **지금 상태**: 가짜 AI(fake)로 전체 흐름이 끝까지 돈다. 사내 DB, 사내 LLM·Whisper, AD SSO(5주 차), 개인정보 암호화(6주 차)는 아직 붙이지 않았다. 로그인은 그때까지 임시 로그인이다. AI 결과의 품질은 실제 모델을 붙인 뒤에 본다.
 - **일정**: 12/11 시범 운영 가능, 12/18 실제 면접에 시범 적용, 12/31 전체 완료. 매주 수요일에 현업 회의가 있다. → [10-roadmap.md](10-roadmap.md)
 
 ## 2. 첫날 할 일
@@ -28,10 +29,10 @@
    | --- | --- | --- |
    | frontend | `npm ci` 뒤 `npm run dev` (백엔드 없이 모의 데이터) | `npm run check` |
    | backend | `./gradlew bootRun` (H2 + 시드 데이터, 8080) | `./gradlew build` |
-   | agent | `uvicorn app.main:app --port 8000` (fake 모델) | `pytest` |
+   | agent | 처음 한 번 `python -m venv .venv` → `.venv/Scripts/python -m pip install -r requirements-dev.txt`. 그다음 `.venv/Scripts/python -m uvicorn app.main:app --port 8000` (fake 모델). 리눅스는 `.venv/bin/python` | `.venv/Scripts/python -m pytest` |
 
 3. 세 서비스를 함께 띄워 한 바퀴 돌려 본다: 백엔드 → agent → 프런트(`npm run dev:api`). 엑셀 업로드 → 매칭 → 사전 리포트 → 면접 방 → 종료 → 보고서.
-4. 목업을 열어 본다: frontend `dist-demo/interview-mockup-2026-w50.html`을 더블클릭. 현업에게 보여 주는 화면이 이것이다.
+4. 목업을 열어 본다: frontend `dist-demo/`의 HTML을 더블클릭. 현업 회의에서 보여 주는 화면이 이것이고, 주차마다 파일이 다르다(11/18 회의는 `interview-mockup-2026-w47.html`). 모든 기능이 켜진 모습은 가장 뒤 주차 파일(`…-w50.html`)에서 본다.
 5. 레포 루트에서 OpenCode를 열고 "이 레포의 skill 목록을 알려 줘"라고 물어 `AGENTS.md`와 skill이 읽히는지 본다.
 6. [06-collaboration.md](06-collaboration.md)를 읽고 작은 것 하나를 골라 첫 PR을 낸다.
 
@@ -44,9 +45,9 @@ dev에서 작업 브랜치를 딴다 → 고친다 → 확인 명령 통과 → 
 - 아침에 `git pull --rebase`로 `dev`를 당겨 온다.
 - 작업 브랜치는 `feat/<짧은-설명>`, `fix/<짧은-설명>`. **하루 이틀 안에** 합친다. 오래 들고 있지 않는다.
 - PR은 작게 낸다(리뷰하는 사람이 15분 안에 읽을 크기). 포맷 바꾸기·파일 이동은 기능 변경과 다른 PR로 낸다.
-- PR 제목(= 커밋 메시지)은 `<영역>: <무엇을 왜>` 한 줄, 한국어. 예: `speaker: 되묻기 구간 규칙 추가`. 계약을 바꾸면 앞에 `[계약 변경]`.
-- PR에 확인 명령을 돌린 결과를 붙인다. 계약을 건드렸으면 네 파일이 같은지 비교한 결과도 붙인다.
-- 리뷰는 1명, 영역이 다른 사람이 본다. 계약을 바꾸는 PR은 세 명 모두 확인한다.
+- PR 제목(= 커밋 메시지)은 `<영역>: <무엇을 왜>` 한 줄, 한국어. 예: `speaker: 되묻기 구간 규칙 추가`. API 명세를 바꾸면 앞에 `[API 변경]`.
+- PR에 확인 명령을 돌린 결과를 붙인다. API 명세를 건드렸으면 네 파일이 같은지 비교한 결과도 붙인다.
+- 리뷰는 1명, 영역이 다른 사람이 본다. API 명세를 바꾸는 PR은 세 명 모두 확인한다.
 - `main`에는 직접 커밋하지 않는다.
 - `dev`가 깨졌으면 새 작업보다 복구가 먼저다.
 - 덜 끝난 기능은 기능 플래그로 가린 채 합친다. → [06-collaboration.md](06-collaboration.md) 2장
@@ -66,13 +67,13 @@ dev에서 작업 브랜치를 딴다 → 고친다 → 확인 명령 통과 → 
 
 어기면 다른 두 사람이 멈추거나, 되돌리기 어려운 것들이다.
 
-1. **계약이 먼저다.** 경로·필드·열거형·WebSocket 이벤트는 `docs/contract/api-contract.md`를 따른다. 필요한 값이 계약에 없으면 임의로 만들지 않는다. 바꿀 때는 먼저 공유하고 합의한 뒤, 원본([03-api-contract.md](03-api-contract.md))과 세 레포의 복사본을 **같은 날 같은 내용으로** 고친다. 네 파일이 같아야 한다. → [06-collaboration.md](06-collaboration.md) 4장, 각 레포의 skill `change-api-contract`
+1. **API 명세가 먼저다.** 경로·필드·열거형·WebSocket 이벤트는 `docs/contract/api-contract.md`를 따른다. 필요한 값이 API 명세에 없으면 임의로 만들지 않는다. 바꿀 때는 먼저 공유하고 합의한 뒤, 원본([03-api-contract.md](03-api-contract.md))과 세 레포의 복사본을 **같은 날 같은 내용으로** 고친다. 네 파일이 같아야 한다. → [06-collaboration.md](06-collaboration.md) 4장, 각 레포의 skill `change-api-contract`
 2. **블라인드 항목을 저장·응답·AI 입력에 넣지 않는다.** 성별, 생년월일, 가족, 주소, 출신 지역 등이다. agent로 가는 자료에는 면접자 이름과 수험번호도 넣지 않는다.
 3. **실제 사람의 정보, 사내 주소, 비밀키를 코드·테스트·문서에 쓰지 않는다.** 시드와 샘플은 가상의 인물만. 비밀값은 환경변수 이름만 적는다.
 4. **녹음을 임의로 저장하지 않는다.** 기본은 메모리에만 두고 사후 정리 뒤 버린다. 디버깅용으로도 디스크에 쓰지 않는다.
 5. **AI가 합격·불합격을 정하게 하지 않는다.** AI 점수와 면접관 점수를 합산하지 않는다.
 6. **스택을 바꾸지 않는다.** frontend는 JavaScript(타입스크립트 아님), backend는 Java 8 문법과 `javax.*`, 네이티브 SQL 금지. 사내에는 인터넷이 없어 새 의존성은 사내 미러에 있는지부터 확인한다.
-7. **여러 사람이 같이 건드리는 파일은 한 줄 추가만 한다.** frontend의 `router/index.js`, `api/index.js`, `mocks/server.js`, `lib/labels.js`, `AppShell.vue`, backend의 `application*.yml`·시드, agent의 `container.py`·provider 표 등이다. 기존 줄의 순서나 포맷을 바꾸지 않는다. → [06-collaboration.md](06-collaboration.md) 3장
+7. **여러 사람이 같이 건드리는 파일은 한 줄 추가만 한다.** frontend의 `router/index.js`, `api/index.js`, `mocks/server.js`, `lib/labels.js`, `AppShell.vue`, backend의 `application.yml`·`build.gradle`·`SecurityConfig`·`LocalSeedRunner`·`excel-mapping.yml`·`schema.sql`, agent의 `container.py`·`providers/registry.py`·`providers/fake_responses.py`·`settings/sections.py`·README의 환경변수 표다. 기존 줄의 순서나 포맷을 바꾸지 않는다. → [06-collaboration.md](06-collaboration.md) 3장
 
 레포별 금지 사항 전체는 각 레포 `AGENTS.md`에 있다.
 
@@ -81,7 +82,7 @@ dev에서 작업 브랜치를 딴다 → 고친다 → 확인 명령 통과 → 
 사내에서는 OpenCode로만 AI 도움을 받는다.
 
 - **레포 루트에서 연다.** 그래야 그 레포의 `AGENTS.md`와 skill이 잡힌다. 두 레포에 걸친 일은 레포마다 따로 시킨다.
-- 요청에 **무엇을, 어디에, 끝난 모습**을 적는다. 계약이 바뀌는 일이면 "계약 변경 포함"이라고 적는다.
+- 요청에 **무엇을, 어디에, 끝난 모습**을 적는다. API 명세가 바뀌는 일이면 "API 변경 포함"이라고 적는다.
 - 끝나면 **확인 명령을 돌린 결과**를 보여 달라고 한다. 통과하지 않은 변경은 합치지 않는다.
 - 자주 하는 일은 skill이 절차를 안다.
 
@@ -97,7 +98,7 @@ dev에서 작업 브랜치를 딴다 → 고친다 → 확인 명령 통과 → 
   | 새 AI 작업 | agent | `add-graph` |
   | 전사 지연·잘림 조정 | agent | `tune-audio-pipeline` |
   | 블라인드 기준 반영 | agent | `update-blind-rules` |
-  | 계약 변경 | 세 레포 | `change-api-contract` |
+  | API 변경 | 세 레포 | `change-api-contract` |
   | 기존 사내 코드의 기능 가져오기 | 세 레포 | `port-legacy-feature` |
 
 - 코드 구조를 바꾸면 같은 PR에서 `AGENTS.md`·skill·`docs/`를 같이 고친다. 문서가 틀리면 OpenCode가 틀린 곳을 고친다. → [06-collaboration.md](06-collaboration.md) 5장
@@ -139,7 +140,7 @@ dev에서 작업 브랜치를 딴다 → 고친다 → 확인 명령 통과 → 
 
 - A·B·C 자리에 누가 앉는지
 - 합치기 전 확인을 사내에서 자동으로 돌릴지
-- 세 레포 공통 문서(이 폴더)를 사내에서 어디에 둘지. 계약 원본의 위치가 여기에 달려 있다
+- 세 레포 공통 문서(이 폴더)를 사내에서 어디에 둘지. API 명세 원본의 위치가 여기에 달려 있다([06-collaboration.md](06-collaboration.md) 6장)
 - 공식 레포로 올리는 시점과 방식
 
 → [10-roadmap.md](10-roadmap.md) 7장

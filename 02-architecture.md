@@ -65,7 +65,7 @@
 | 바꾸려는 것 | 손대는 곳 | 방법 |
 | --- | --- | --- |
 | LLM | agent `config/providers.yaml` | `impl`과 주소·모델 이름을 바꾼다. 형식이 다르면 provider 한 파일 추가 |
-| STT(Whisper) | agent `config/providers.yaml`, `app/providers/stt/` | 위와 같음. DS API Hub 규격은 어댑터 한 파일 |
+| STT(Whisper) | agent `config/providers.yaml`, `app/providers/`(`whisper_http.py`) | 위와 같음. DS API Hub 규격은 어댑터 한 파일 |
 | DB | backend `application-<profile>.yml` | 프로파일 전환. 엔티티·쿼리는 그대로 |
 | Redis (단일 ↔ Sentinel) | backend·agent 설정 | 설정만 |
 | 인증(개발용 ↔ AD SSO) | backend `auth`, frontend 로그인 화면 | `AuthProvider` 구현 추가 |

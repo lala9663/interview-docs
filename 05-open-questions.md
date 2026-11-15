@@ -17,7 +17,7 @@
 | 7 | Knox Teams에서 음성·자막(실시간, 사후)을 API로 받을 수 있는가. 참가자별로 나뉘는가 | 받을 수 없다고 보고, 신입과 같이 **면접관 노트북 브라우저가 소리를 받아** 보낸다 | 받을 수 있으면 agent 오디오 입력과 화자 판정(채널), frontend 면접 방을 듣기 전용 기본으로 |
 | 8 | 면접실 마이크 구성(한 대 / 지원자용·면접관용 분리) | 방마다 마이크 한 대(면접관 노트북) | 분리 가능하면 [04-speaker-separation.md](04-speaker-separation.md) 5장 |
 | 9 | 평가 항목과 등급 체계, 채용 시스템 입력 화면(캡처) | 트랙·유형별 4개 항목, 5점 만점, 등급은 A~D(자유 문자열 저장). 평가 내용을 한 덩어리 글로 복사 | backend 평가 항목 데이터, frontend `MyEvaluationPanel.vue` |
-| 10 | 보고서 양식(신입 간단 / 경력 상세의 항목) | 신입: 한 줄 총평, 코멘트, 강점, 우려, 주요 문답. 경력: 여기에 역량별 분석, 이력 확인, 다음 차수 확인점, 리스크 | 계약 4.3의 `ReportContent`, agent `report` 그래프·프롬프트, frontend `ReportView.vue` |
+| 10 | 보고서 양식(신입 간단 / 경력 상세의 항목) | 신입: 한 줄 총평, 코멘트, 강점, 우려, 주요 문답. 경력: 여기에 역량별 분석, 이력 확인, 다음 차수 확인점, 리스크 | API 명세 4.3의 `ReportContent`, agent `report` 그래프·프롬프트, frontend `ReportView.vue` |
 | 11 | 사후 STT 보정본을 기다릴 수 있는가(신입은 1~2분 안에 등급 입력) | 초안을 먼저 보여 주고 보정본이 오면 자동으로 바꾼다. 평가 화면은 초안 상태에서도 쓸 수 있다 | - |
 | 12 | 녹음 파일 보관 | **저장하지 않는다.** 방 음성은 메모리에 모아 사후 STT 뒤 지운다. 사후 STT가 실패하면 다시 시도하려고 메모리에 최대 30분 더 들고 있다가 지운다. 이 30분이 괜찮은지도 함께 확인한다 | 30분을 바꾸려면 agent `LIVE_POST_STT_HOLD_MINUTES`(0이면 실패 즉시 지움). 보관으로 바뀌면 agent `AUDIO_RETENTION=KEEP`, `AUDIO_STORE=file`(구현돼 있고 꺼져 있다. 암호화 함수는 자리만), frontend `VITE_AUDIO_KEEP=true`, 지원자 동의 문구 |
 | 13 | 전사·보고서의 보관 기간과 삭제 절차 | 없다(계속 보관) | backend에 삭제 기능 추가 |
@@ -25,19 +25,20 @@
 | 15 | 면접이 "완료"되는 조건 | 배정된 면접관이 모두 평가를 제출하면 완료 | backend `EvaluationService.completeIfAllSubmitted` |
 | 16 | 그룹 면접(지원자 여러 명)이 있는가 | 없다(지원자 1명) | 있으면 화자 구분과 데이터 구조를 다시 설계 |
 | 17 | 보고서를 Knox 메일로 보내는 기능 | 없다 | 후순위 과제 |
-| 18 | 현업이 이미 가진 직무별 면접 질문 목록이 있는가. 있다면 어떤 형식인가(엑셀 열 구성, 직무·면접 유형·분류가 나뉘어 있는지, 몇 개쯤인지). 11/18 회의에서 묻는다 | 없다고 보고 관리자가 화면에서 하나씩 넣는다. 면접에서 쓴 질문을 은행에 담는 기능은 있다 | 형식을 받으면 질문 은행 엑셀 일괄 등록을 만든다(backend `questionbank`, 계약 2.9, frontend 질문 은행). [09-backlog.md](09-backlog.md) 4장, [10-roadmap.md](10-roadmap.md) 4주 차 |
+| 18 | 현업이 이미 가진 직무별 면접 질문 목록이 있는가. 있다면 어떤 형식인가(엑셀 열 구성, 직무·면접 유형·분류가 나뉘어 있는지, 몇 개쯤인지). 11/18 회의에서 묻는다 | 없다고 보고 관리자가 화면에서 하나씩 넣는다. 면접에서 쓴 질문을 은행에 담는 기능은 있다 | 형식을 받으면 질문 은행 엑셀 일괄 등록을 만든다(backend `questionbank`, API 명세 2.9, frontend 질문 은행). [09-backlog.md](09-backlog.md) 4장, [10-roadmap.md](10-roadmap.md) 4주 차 |
+| 26 | 화자 구분이 얼마나 맞아야 쓸 수 있는가(몇 번에 한 번 틀려도 되는가). 11/18 회의에서 묻는다 | 기준 없음. 틀린 것은 화면에서 눌러 고치고, 사후 정리 때 다시 판정한다 | 4주 차의 "화자 구분을 지금 방식으로 갈지 대안으로 갈지"의 판단 기준이 된다([10-roadmap.md](10-roadmap.md) 3장, [04-speaker-separation.md](04-speaker-separation.md)) |
 
 ## 2. 사내 다른 팀에 확인할 것
 
 | # | 누구에게 | 질문 | 지금의 가정 | 고칠 곳 |
 | --- | --- | --- | --- | --- |
-| 18 | DS API Hub | Whisper large-v3의 API 규격(주소, 인증, 파일 형식, 응답), 화자 정보·단어 시각 제공 여부, 동시 요청 한도, 처리 시간, 최대 길이 | OpenAI 형식의 multipart 동기 호출, 화자 정보 없음, 문장 부호는 붙여 줌 | agent `config/providers.yaml`, `app/providers/whisper_http.py` (`docs/providers.md`) |
-| 19 | 사내 LLM | API 형식, 문맥 길이, JSON 출력 지원, 동시 요청 한도, 응답 시간 | OpenAI 형식. 60분 면접 전사가 한 번에 들어간다 | agent `config/providers.yaml`. 문맥이 짧으면 평가·보고서 그래프에 나눠 요약하는 단계 |
-| 20 | 사내 LLM / DS API Hub | 임베딩 모델이 있는가 | 없다. 질문 매칭은 문자 기반 유사도 | agent `EmbeddingProvider` 구현 추가 |
-| 21 | 인증 | AD SSO 방식(SAML / OIDC 등), 사번·이름·부서·역할을 어디서 받는가 | 미정. 개발용 로그인만 동작한다. **지금은 dev/prod 프로파일에 로그인 수단이 없다** | backend `AdSsoAuthProvider`, frontend 로그인 화면 (각 `docs/auth.md`) |
-| 22 | 인프라 | Oracle 버전, Redis Sentinel 접속 정보, 로드밸런서의 WebSocket 지원과 경로 기준 분배, 서버 메모리 | Oracle 12c 이상. agent 여러 대일 때 같은 방은 같은 서버로 가는 것을 권장 | backend `docs/database.md`, agent `docs/concurrency.md` |
-| 23 | 보안 / KMS 담당 | 개인정보 암호화(KMS)를 쓰는 방식, 같은 값이 같은 암호문이 되는지, 암호화할 항목의 기준 | 적용하지 않았다. 방식이 나오면 6주 차에 붙인다([10-roadmap.md](10-roadmap.md)). 그때까지 개발 DB에는 마스킹 샘플·가상 데이터만 넣는다 | backend 컬럼 변환기(아직 없음), 이름 검색(`CandidateService`) |
-| 24 | PaaS | 배포는 서비스마다 따로 있는 config 레포를 거쳐 자동으로 된다(2026-11-15 확인). 남은 확인: config 레포에 무엇을 적는지(빌드 명령, 실행 명령, 환경변수, 포트), 빌드 결과물의 형식, HTTPS와 WebSocket 프록시 설정 | 세 레포에는 CI/CD 파일(Dockerfile, 파이프라인 정의)이 없다. 빌드·실행 명령과 환경변수 목록만 각 레포의 `README.md`·`docs/setup.md`에 있다. 마이크는 HTTPS에서만 동작한다 | [08-import-checklist.md](08-import-checklist.md) |
+| 19 | DS API Hub | Whisper large-v3의 API 규격(주소, 인증, 파일 형식, 응답), 화자 정보·단어 시각 제공 여부, 동시 요청 한도, 처리 시간, 최대 길이 | OpenAI 형식의 multipart 동기 호출, 화자 정보 없음, 문장 부호는 붙여 줌 | agent `config/providers.yaml`, `app/providers/whisper_http.py` (`docs/providers.md`) |
+| 20 | 사내 LLM | API 형식, 문맥 길이, JSON 출력 지원, 동시 요청 한도, 응답 시간 | OpenAI 형식. 60분 면접 전사가 한 번에 들어간다 | agent `config/providers.yaml`. 문맥이 짧으면 평가·보고서 그래프에 나눠 요약하는 단계 |
+| 21 | 사내 LLM / DS API Hub | 임베딩 모델이 있는가 | 없다. 질문 매칭은 문자 기반 유사도 | agent `EmbeddingProvider` 구현 추가 |
+| 22 | 인증 | AD SSO 방식(SAML / OIDC 등), 사번·이름·부서·역할을 어디서 받는가 | 5주 차에 붙인다. 사내에 AD SSO 연동이 일부 구현된 코드가 있어 그것을 참고한다. 그때까지는 임시 로그인으로 개발하고, 늦어지면 시범 적용도 임시 로그인으로 한다. **지금은 dev/prod 프로파일에 로그인 수단이 없다**(개발용 로그인은 local 에서만 열린다) | backend `AdSsoAuthProvider`, frontend 로그인 화면 (각 `docs/auth.md`), skill `port-legacy-feature` |
+| 23 | 인프라 | Oracle 버전, Redis Sentinel 접속 정보, 로드밸런서의 WebSocket 지원과 경로 기준 분배, 서버 메모리 | Oracle 12c 이상. agent 여러 대일 때 같은 방은 같은 서버로 가는 것을 권장 | backend `docs/database.md`, agent `docs/concurrency.md` |
+| 24 | 보안 / KMS 담당 | 개인정보 암호화(KMS)를 쓰는 방식, 같은 값이 같은 암호문이 되는지, 암호화할 항목의 기준 | 적용하지 않았다. 방식이 나오면 6주 차에 붙인다([10-roadmap.md](10-roadmap.md)). 그때까지 개발 DB에는 마스킹 샘플·가상 데이터만 넣는다 | backend 컬럼 변환기(아직 없음), 이름 검색(`CandidateService`) |
+| 25 | PaaS | 배포는 서비스마다 따로 있는 config 레포를 거쳐 자동으로 된다(2026-11-15 확인). 남은 확인: config 레포에 무엇을 적는지(빌드 명령, 실행 명령, 환경변수, 포트), 빌드 결과물의 형식, HTTPS와 WebSocket 프록시 설정 | 세 레포에는 CI/CD 파일(Dockerfile, 파이프라인 정의)이 없다. 빌드·실행 명령과 환경변수 목록만 각 레포의 `README.md`·`docs/setup.md`에 있다. 마이크는 HTTPS에서만 동작한다 | [08-import-checklist.md](08-import-checklist.md) |
 
 ## 3. 실제로 확인하지 못한 것
 
@@ -62,12 +63,12 @@
 | 방의 음성과 대화 문맥이 그 방을 맡은 agent 한 대의 메모리에 있다 | 그 서버가 죽으면 그 방의 사후 STT를 못 한다(실시간 전사는 이미 저장돼 있어 초안 보고서는 나온다) | 음성 저장소를 공유 저장소로(`AudioStore` 구현 추가) |
 | 문자 기반 질문 유사도 | 면접관이 질문을 바꿔 말하면 준비된 질문과 매칭되지 않는다 | 임베딩 모델 |
 | 실시간 전사가 몇 초 늦다 | Whisper가 실시간 모델이 아니라 말소리 한 덩어리가 끝나야 전사된다 | 덩어리 길이 조정(agent skill `tune-audio-pipeline`). 근본적으로는 스트리밍 STT |
-| 꼬리질문이 늦거나 빠진다 | 지원자의 답이 끝나고 1.5초 뒤에 만든다. 그 전에 다음 질문이 시작되면 만들지 않는다 | 면접관 가이드(준비된 질문 위주로 진행), "지금 만들기" 버튼 |
+| 꼬리질문이 늦거나 빠진다 | 지원자의 답이 끝나고 1.5초 뒤에 만든다. 그 전에 다음 질문이 시작되면 만들지 않는다 | 면접관 가이드(준비된 질문 위주로 진행). 꼬리질문 칸의 "지금 만들기" 버튼으로 바로 만들 수 있다(구현됨) |
 | AI 작업 실패 시 자동 재시도가 없다 | 화면에서 다시 요청해야 한다 | backend `AiJobRunner` |
-| 기준 데이터(사용자, 평가 항목)를 넣는 화면·API가 없다 | 사내 초기 데이터는 SQL로 넣어야 한다 | 관리 API 추가(계약 변경) |
+| 기준 데이터(사용자, 평가 항목)를 넣는 화면·API가 없다 | 사내 초기 데이터는 SQL로 넣어야 한다 | 관리 API 추가(API 변경) |
 | 초안 보고서와 보정본이 겹치는 경우 | 보정본이 먼저 끝나면 초안은 저장하지 않는다(버전 1이 보정본이 된다) | 의도한 동작 |
 
-## 5. 합의가 필요한 계약 변경 제안
+## 5. 합의가 필요한 API 변경 제안
 
 구현하지 않았다. 필요해지면 [06-collaboration.md](06-collaboration.md) 4장 절차로 진행한다.
 

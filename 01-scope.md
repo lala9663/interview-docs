@@ -50,7 +50,7 @@
 | 꼬리질문 생성(인사·농담 같은 사담에는 만들지 않음) | **과제** | 구현(fake) / 자리 | agent `followup` 그래프 |
 | 면접관 메모 | **과제** | 구현 | frontend 메모, backend `evaluation` |
 | 화상(Knox Teams) 음성·자막 연동 | **과제** | 미확정. 지금은 면접관 노트북이 소리를 받음 | agent 오디오 입력 |
-| 동시 20개 이상 방 | **과제** | 구현(부하 테스트는 fake 기준) | agent `concurrency`, Redis |
+| 동시 20개 이상 방 | **과제** | 구현(부하 테스트는 fake 기준) | agent `app/providers/base.py`(동시 호출 제한), `app/live`(방별 큐), Redis. 수치는 agent `docs/concurrency.md` |
 
 ### 3.3 면접 후
 
@@ -73,7 +73,7 @@
 | AD 인증 | 인증 방식 인터페이스. 지금은 개발용 로그인 + JWT | backend `docs/auth.md` |
 | 반입 후 OpenCode로만 작업 | 레포마다 `AGENTS.md`와 `.opencode/skills` | [06-collaboration.md](06-collaboration.md) |
 | 레포 3개 | frontend / backend / agent | [02-architecture.md](02-architecture.md) |
-| 3명이 동시 작업(`dev` + `main`) | 기능 단위 폴더, 계약 문서, 작은 PR | [06-collaboration.md](06-collaboration.md) |
+| 3명이 동시 작업(`dev` + `main`) | 기능 단위 폴더, API 명세, 작은 PR | [06-collaboration.md](06-collaboration.md) |
 | 화자분리 대응 | 판정 체인 구현 + 측정 스크립트 | [04-speaker-separation.md](04-speaker-separation.md) |
 | 기존 사내 코드의 기능 이식 | 판단 절차와 skill | [07-legacy-porting-guide.md](07-legacy-porting-guide.md) |
 | 녹음 파일 | 기본은 저장하지 않음(메모리 → 사후 STT → 폐기. 사후 STT가 실패하면 최대 30분 들고 다시 시도한 뒤 폐기). 저장 방식으로 바꿀 수 있는 자리 있음 | agent `docs/audio-pipeline.md` |

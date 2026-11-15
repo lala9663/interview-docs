@@ -58,10 +58,10 @@
 | 기존에서 하던 일 | 넣을 레포 | 그 레포의 skill |
 | --- | --- | --- |
 | 화면, 표시, 조작 | frontend | `add-screen`, `add-api-call`, `work-on-live-room` |
-| 저장, 조회, 권한, 상태 전이, 파일·엑셀, 작업 관리 | backend | `add-api-endpoint`, `add-entity-and-migration` |
-| 프롬프트, 모델 호출, STT, 화자, 매칭, 금지 질문 | agent | `add-graph`, `add-provider`, `tune-audio-pipeline` |
+| 저장, 조회, 권한, 상태 전이, 파일·엑셀, 작업 관리 | backend | `add-api-endpoint`, `add-entity-and-migration`, `add-candidate-source` |
+| 프롬프트, 모델 호출, STT, 화자, 매칭, 금지 질문 | agent | `add-graph`, `add-provider`, `tune-audio-pipeline`, `update-blind-rules` |
 
-레포 사이에 새로 오가야 하는 데이터가 있으면 **계약을 먼저** 고친다(`change-api-contract`). 계약이 정해지면 세 사람이 동시에 각자 레포를 진행할 수 있다(프론트는 mock으로).
+레포 사이에 새로 오가야 하는 데이터가 있으면 **API 명세를 먼저** 고친다(`change-api-contract`). API 명세가 정해지면 세 사람이 동시에 각자 레포를 진행할 수 있다(프론트는 mock으로).
 
 ### 2.5 옮길 때 바꾸는 것
 
@@ -75,7 +75,7 @@
 | 로컬 Whisper 스트리밍 전제의 코드(부분 결과가 자주 옴) | 청크 단위 호출 전제로 다시 설계(부분 결과가 드물다) |
 | 비식별 토큰(가명) 기반 처리 | 블라인드 컬럼 제거 + 금지 주제 검사. 비식별화 기능 자체를 가져오라는 요청이면 별도 과제로 범위를 다시 잡는다 |
 | TypeScript, UI 라이브러리, vue-query | JavaScript, 공용 클래스, `api` 함수 + `usePolling` |
-| snake_case 필드 | camelCase(계약) |
+| snake_case 필드 | camelCase(API 명세) |
 | SSE | 면접 방 WebSocket 이벤트 |
 
 ### 2.6 확인하고 기록한다
@@ -93,7 +93,7 @@
 기존 프로젝트(../legacy-interview)의 "<기능 이름>" 기능을 이 레포에 가져와 줘.
 port-legacy-feature skill을 따라서,
 1) 기존 코드에서 이 기능의 화면·API·서버 로직·AI 프롬프트를 찾아 분해한 표를 먼저 보여 주고
-2) 이 레포에 이미 있는 것과의 차이, 세 레포 중 어디에 무엇을 넣을지, 계약 변경이 필요한지 정리한 다음
+2) 이 레포에 이미 있는 것과의 차이, 세 레포 중 어디에 무엇을 넣을지, API 변경이 필요한지 정리한 다음
 3) 내 확인을 받고 이 레포 몫만 구현해 줘.
 ```
 

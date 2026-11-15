@@ -21,7 +21,7 @@ interview/
 | 3 | [03-api-contract.md](03-api-contract.md) | REST · WebSocket · 내부 API의 정확한 모양(원본) |
 | 4 | [04-speaker-separation.md](04-speaker-separation.md) | Whisper에 화자분리가 없을 때의 대응책과 측정 결과 |
 | 5 | [05-open-questions.md](05-open-questions.md) | 현업 확인이 필요한 것, 가정으로 만든 것, 답이 오면 바꿀 위치 |
-| 6 | [06-collaboration.md](06-collaboration.md) | 3명 브랜치 규칙(`dev` + `main`), 계약 변경 절차, OpenCode 사용법과 skill 목록 |
+| 6 | [06-collaboration.md](06-collaboration.md) | 3명 브랜치 규칙(`dev` + `main`), API 변경 절차, OpenCode 사용법과 skill 목록 |
 | 7 | [07-legacy-porting-guide.md](07-legacy-porting-guide.md) | 기존 사내 코드(Python + Vue)의 기능을 가져오는 절차, 기능 대응표 |
 | 8 | [08-import-checklist.md](08-import-checklist.md) | 반입 전·후 체크리스트, 사내 자원에 붙이는 순서 |
 | 9 | [09-backlog.md](09-backlog.md) | 기능 후보 목록: 면접관·현업 입장에서 더 필요한 것, 우선순위 |
@@ -45,11 +45,12 @@ interview/
 | backend | `README.md`, `AGENTS.md` | `docs/architecture.md`, `setup.md`, `database.md`, `auth.md`, `excel-upload.md`, `open-questions.md` |
 | agent | `README.md`, `AGENTS.md` | `docs/architecture.md`, `setup.md`, `providers.md`, `audio-pipeline.md`, `speaker-separation.md`, `concurrency.md`, `blind-rules.md`, `prompts.md`, `open-questions.md` |
 
-세 레포 모두 `docs/contract/api-contract.md`(계약 복사본)와 `.opencode/skills/`(OpenCode용 작업 절차)가 있다.
+세 레포 모두 `docs/contract/api-contract.md`(API 명세 복사본)와 `.opencode/skills/`(OpenCode용 작업 절차)가 있다.
 
 ## 지금 상태
 
-- 외부 개발 환경에서 **fake AI**(가짜 LLM·STT)로 전체 흐름이 돈다. 실제 사내 LLM·Whisper·Oracle·Redis Sentinel·AD SSO는 사내에서 설정을 바꿔 붙인다(08).
+- 반입은 1주 차에 끝났다. 그 뒤에 바뀐 것은 주차별로 사내 레포에 올린다.
+- **fake AI**(가짜 LLM·STT)로 전체 흐름이 돈다. 실제 사내 LLM·Whisper·Oracle·Redis Sentinel·AD SSO는 사내에서 설정을 바꿔 붙인다(08).
 - 개인정보 암호화(KMS)는 아직 없다. 적용 방식이 나오면 6주 차에 붙인다(10).
 - AI 결과의 **품질**은 실제 모델을 붙인 뒤에 검증한다. fake는 모양과 흐름만 맞춘다.
 - 현업 시연은 서버 없이 여는 목업(HTML 한 파일)으로 한다. 3~6주 차 회의용 목업이 주차마다 하나씩 만들어져 있고, 주차가 올라갈수록 보이는 기능이 늘어난다. 목업 안의 "달라진 것"이 그 주차에 더해진 것을 보여 준다(frontend `docs/setup.md`의 "주차별 목업").
