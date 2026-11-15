@@ -108,7 +108,7 @@ port-legacy-feature skill을 따라서,
 | 지원서 업로드(파일 1건씩, PDF·HWP 읽기·OCR) | 있음(방식 다름) | backend `upload` | 엑셀 한 파일에 여러 명. 문서 읽기·OCR은 없음 |
 | JD 기반 서류 선별·적합도 | 없음 | - | 범위 밖 |
 | 역량 사전(BARS) 초안·확정 | 일부 | backend 평가 항목(`criteria`) | 사전 편집 화면 없음. 항목은 시드·설정 |
-| 면접 차수(전형) | 있음 | backend `interview`, frontend 전형 현황 | 한 사람에 면접 여러 건 |
+| 면접 차수(전형) | 있음 | backend `interview`, frontend 진행 현황 | 한 사람에 면접 여러 건 |
 | 사전 질문 초안 | 있음 | agent `briefing` | 사전 리포트(요약)와 함께 만든다 |
 | 질문 은행 + 임베딩 검색 | 일부 | backend `questionbank`, agent `matching` | 임베딩 없이 문자 n-gram 유사도(임베딩 provider 자리 있음) |
 | 실시간 전사(로컬 Whisper, SSE) | 있음(방식 다름) | agent `audio`·`live`, frontend 면접 방 | 사내 Whisper API, WebSocket |
