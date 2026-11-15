@@ -48,7 +48,7 @@
 ```
 마이크 ─PCM16 16kHz─▶ agent ─▶ 말소리 구간으로 자름 ─▶ Whisper ─▶ (partial 이벤트)
                                ─▶ LLM 다듬기 ─▶ 화자 판정 ─▶ (final 이벤트) ─▶ backend에 저장
-                               ─▶ 면접관 말이면 준비된 질문과 매칭 ─▶ (matched 이벤트)
+                               ─▶ 면접관 말이면 준비된 질문·제안한 꼬리질문과 매칭 ─▶ (question.matched / followup.matched 이벤트)
                                ─▶ 지원자 답이 끝나면 꼬리질문 ─▶ (followup 이벤트) ─▶ backend에 저장
 ```
 

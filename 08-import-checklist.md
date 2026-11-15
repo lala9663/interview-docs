@@ -51,7 +51,7 @@
 | 5 | AD SSO | backend, frontend | 각 `docs/auth.md` | 로그인 흐름, 사번·이름·부서 매핑, 관리자 권한을 주는 방법 |
 | 6 | 실제 엑셀(마스킹 샘플) | backend | `docs/excel-upload.md` | 컬럼 이름을 `excel-mapping.yml`에 맞추기, 블라인드 컬럼 표시, DRM 해제본으로 올리기 |
 | 7 | 블라인드·금지 질문 기준(현업 제공) | backend, agent | agent `docs/blind-rules.md` | 기준을 YAML에 반영, 검수 스크립트 |
-| 8 | 배포(PaaS, Jenkins) | 세 레포 | - | HTTPS(마이크는 HTTPS에서만), WebSocket 프록시, 환경변수 주입 |
+| 8 | 배포(PaaS, 서비스별 config 레포를 거친 자동 배포) | 세 레포 + 각 config 레포 | 각 레포 `docs/setup.md` | config 레포에 넣을 빌드·실행 명령과 환경변수, HTTPS(마이크는 HTTPS에서만), WebSocket 프록시. 세 레포에는 CI/CD 파일이 없다 |
 
 ### 3·4번(모델)을 붙인 뒤 꼭 재야 하는 것
 

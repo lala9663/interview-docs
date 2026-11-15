@@ -1,4 +1,6 @@
-# 면접 어시스턴트 — 프로젝트 문서
+# DSInterview — 프로젝트 문서
+
+서비스 이름은 **DSInterview**다(면접 지원 서비스). 화면 이름과 디자인 방향은 frontend `docs/ui-guide.md`에 있다.
 
 세 레포(frontend, backend, agent)에 걸친 문서다. 한 레포 안의 구조·설정·실행은 그 레포의 `docs/`에 있다.
 
@@ -47,3 +49,4 @@ interview/
 - 외부 개발 환경에서 **fake AI**(가짜 LLM·STT)로 전체 흐름이 돈다. 실제 사내 LLM·Whisper·Oracle·Redis Sentinel·AD SSO는 사내에서 설정을 바꿔 붙인다(08).
 - 개인정보 암호화(KMS)는 아직 없다. 적용 방식이 나오면 6주 차에 붙인다(10).
 - AI 결과의 **품질**은 실제 모델을 붙인 뒤에 검증한다. fake는 모양과 흐름만 맞춘다.
+- 현업 시연은 서버 없이 여는 목업(HTML 한 파일)으로 한다. 주차마다 따로 남기고 지난주 대비 달라진 것을 목업 안에서 보여 준다(frontend `docs/setup.md`의 "주차별 목업").

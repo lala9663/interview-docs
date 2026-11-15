@@ -37,7 +37,7 @@
 | 21 | 인증 | AD SSO 방식(SAML / OIDC 등), 사번·이름·부서·역할을 어디서 받는가 | 미정. 개발용 로그인만 동작한다. **지금은 dev/prod 프로파일에 로그인 수단이 없다** | backend `AdSsoAuthProvider`, frontend 로그인 화면 (각 `docs/auth.md`) |
 | 22 | 인프라 | Oracle 버전, Redis Sentinel 접속 정보, 로드밸런서의 WebSocket 지원과 경로 기준 분배, 서버 메모리 | Oracle 12c 이상. agent 여러 대일 때 같은 방은 같은 서버로 가는 것을 권장 | backend `docs/database.md`, agent `docs/concurrency.md` |
 | 23 | 보안 / KMS 담당 | 개인정보 암호화(KMS)를 쓰는 방식, 같은 값이 같은 암호문이 되는지, 암호화할 항목의 기준 | 적용하지 않았다. 방식이 나오면 6주 차에 붙인다([10-roadmap.md](10-roadmap.md)). 그때까지 개발 DB에는 마스킹 샘플·가상 데이터만 넣는다 | backend 컬럼 변환기(아직 없음), 이름 검색(`CandidateService`) |
-| 24 | PaaS | 배포 방식(Jenkins), HTTPS, 환경변수 주입 | 미정. 마이크는 HTTPS에서만 동작한다 | [08-import-checklist.md](08-import-checklist.md) |
+| 24 | PaaS | 배포는 서비스마다 따로 있는 config 레포를 거쳐 자동으로 된다(2026-11-15 확인). 남은 확인: config 레포에 무엇을 적는지(빌드 명령, 실행 명령, 환경변수, 포트), 빌드 결과물의 형식, HTTPS와 WebSocket 프록시 설정 | 세 레포에는 CI/CD 파일(Dockerfile, 파이프라인 정의)이 없다. 빌드·실행 명령과 환경변수 목록만 각 레포의 `README.md`·`docs/setup.md`에 있다. 마이크는 HTTPS에서만 동작한다 | [08-import-checklist.md](08-import-checklist.md) |
 
 ## 3. 실제로 확인하지 못한 것
 
@@ -74,8 +74,8 @@
 | 제안 | 이유 |
 | --- | --- |
 | 평가 응답의 `score`에 `null` 허용 | "근거가 없어 점수를 내지 않음"을 항목별로 표시(지금은 항목을 빼고 총평에 적는다) |
-| `question.matched`에 질문 은행·꼬리질문 후보와의 매칭도 싣기 | 지금은 준비된 질문만 화면에 알릴 수 있다 |
-| 면접 중 추가·채택된 질문을 agent에 알리는 방법 | 지금은 모르는 질문 id가 오면 agent가 방 정보를 다시 읽는다 |
+| `question.matched`에 질문 은행과의 매칭도 싣기 | 지금은 준비된 질문(`question.matched`)과 제안한 꼬리질문(`followup.matched`)만 화면에 알린다. 은행 질문과의 매칭은 화자 판정에만 쓴다 |
+| 면접 중 추가·채택된 질문을 백엔드가 agent에 알리는 방법 | 지금은 프런트가 `question.added`를 보내면 agent가 방 정보를 다시 읽는다. 프런트를 거치지 않고 더해진 질문은 모른다 |
 | 방 종료 이벤트(`room.ended`) | 지금은 닫힘 코드로만 안다 |
 | 2채널 오디오 프레임 형식 | 마이크 2개 또는 "내 마이크 + 화상 소리"로 화자를 채널로 정하기 위해 |
 | 사용자·평가 항목 관리 API | 4장의 기준 데이터 문제 |
