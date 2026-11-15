@@ -14,7 +14,7 @@
 | 면접자 목록 필터 | 면접 종류 탭(지금 차수 기준), 담당 직무가 하나인 면접관은 그 직무가 먼저 선택됨 | 면접자, 계약 2.4 `type=` |
 | 준비한 질문의 출처별 사용률 | JD·이력서·질문 은행 가운데 어느 쪽 질문이 실제로 더 쓰였는지 | 관리 > AI 품질, `questions.bySource` |
 | DSInterview 디자인 | 이름과 색(파란색), 선과 여백 중심의 화면 규칙 | frontend `docs/ui-guide.md` |
-| 주차별 목업 | 시연용 HTML을 주차 이름으로 남기고, 목업 안에서 지난주 대비 달라진 것을 보여 준다 | frontend `docs/setup.md`, `src/mocks/changelog.js` |
+| 주차별 목업 | 3~6주 차 회의용 목업을 주차마다 한 파일씩 만든다. 코드는 한 벌이고 주차별 목업에서만 그 주차에 보여 줄 기능을 켠다. 목업 안의 "달라진 것"이 주차별 변경을 보여 준다 | frontend `docs/setup.md`, `src/lib/features.js`, `src/mocks/changelog.js` |
 | 당일 운영 현황판 | 방별 진행 상태, 시작 지연, 시간 초과, 마이크·전사 문제를 한 화면에서 | 관리 > 운영 현황, 계약 2.11 `GET /admin/operations` |
 | AI 품질 점검 | AI 점수와 면접관 점수의 차이, 꼬리질문 채택률, 화자 판정 분포, 질문 자동 인식률, 보고서 소요 시간, 작업 실패 | 관리 > AI 품질, `GET /admin/quality` |
 | 면접관 편차 리포트 | 면접관별 점수 분포, 동료 대비·전체 대비 편차, 미제출 평가 | 관리 > 면접관 편차, `GET /admin/interviewer-stats` |
