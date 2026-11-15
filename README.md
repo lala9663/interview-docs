@@ -25,9 +25,12 @@ interview/
 | 7 | [07-legacy-porting-guide.md](07-legacy-porting-guide.md) | 기존 사내 코드(Python + Vue)의 기능을 가져오는 절차, 기능 대응표 |
 | 8 | [08-import-checklist.md](08-import-checklist.md) | 반입 전·후 체크리스트, 사내 자원에 붙이는 순서 |
 | 9 | [09-backlog.md](09-backlog.md) | 기능 후보 목록: 면접관·현업 입장에서 더 필요한 것, 우선순위 |
+| 먼저 | [11-team-guide.md](11-team-guide.md) | 팀원 가이드: 새로 합류한 사람이 첫 주에 알아야 할 것 한 장. 첫날 할 일, 매일·매주의 흐름, 꼭 지킬 것, 막혔을 때 볼 곳 |
 | 10 | [10-roadmap.md](10-roadmap.md) | 개발 일정: 주별 목표, 세 명의 담당, 주간 흐름, 일정을 바꾸는 방법. 매주 바뀐다 |
 
 ## 처음 온 사람
+
+[11-team-guide.md](11-team-guide.md)에 첫 주에 알아야 할 것이 한 장으로 있다. 요약하면:
 
 1. 01, 02를 읽는다.
 2. 맡을 레포의 `README.md` → `AGENTS.md` → `docs/setup.md` 순으로 읽고 로컬에서 띄운다.
