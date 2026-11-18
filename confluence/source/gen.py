@@ -62,6 +62,12 @@ td b{font-weight:700}td.m{color:#1428a0;font-weight:700;white-space:nowrap}td.g{
 """
 
 
+# BODY_ONLY=1 이면 제목·한 줄 설명·바닥글 없이 그림 부분만 만든다(1600x640). PPT에 넣을 때 쓴다.
+BODY_ONLY = os.environ.get('BODY_ONLY') == '1'
+if BODY_ONLY:
+    CSS += 'html,body{height:640px}body{padding:18px 20px}.kicker,h1,.line,.foot{display:none}.body{margin-top:0}'
+
+
 def page(fid, group, no, title, line, body, tag=''):
     kick = '%s · %s' % (group, no) + (' · <span style="color:#a06a00">제안</span>' if tag == 'p' else '')
     html = ('<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>%s</style></head><body>'

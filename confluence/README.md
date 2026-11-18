@@ -2,6 +2,8 @@
 
 > 사내 컨플루언스에 올릴 내용이다. 항목마다 한 줄 설명과 그림 한 장이 있다. 그림은 `images/` 폴더의 PNG(1600×900)다.
 >
+> 같은 내용의 PPT는 `DSInterview-architecture.pptx`다(23장: 표지, 구분 2장, 내용 20장). 제목과 한 줄 설명은 고칠 수 있는 글자이고 그림은 PNG로 들어 있다.
+>
 > "제안"이 붙은 항목은 아직 만들지 않은 것이다. 나머지는 지금 코드에 있는 그대로다.
 >
 > 그림을 고치려면 `source/gen.py`의 글을 바꾸고 다시 만든다(이 폴더의 맨 아래 "다시 만드는 법").
@@ -139,3 +141,4 @@ SSE가 아니라 WebSocket을 쓴다. 음성을 올리고 결과를 내려받는
 2. `python source/gen.py <임시 폴더>`로 항목마다 HTML을 만든다.
 3. 크롬으로 각 HTML을 1600×900 PNG로 찍는다: `chrome --headless=new --window-size=1600,900 --screenshot=<파일>.png file:///<임시 폴더>/<항목>.html`
 4. PNG를 `images/`에 같은 이름으로 덮어쓴다.
+5. PPT도 다시 만들려면: `BODY_ONLY=1 python source/gen.py <임시 폴더>`로 그림 부분만 만들어 1600×640으로 찍고, `node source/build_ppt.js <임시 폴더> <출력.pptx> <apply_theme.js 경로>`를 돌린다(`pptxgenjs` 필요).
