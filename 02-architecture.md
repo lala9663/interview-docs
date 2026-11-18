@@ -12,7 +12,7 @@
 ┌────────────────────┐   REST /api/v1 (JWT)    ┌────────────────────────┐   JPA    ┌─────────┐
 │ interview-frontend │ ──────────────────────▶ │ interview-backend      │ ───────▶ │ Oracle  │
 │ Vue 3 · JS · Vite 4│                         │ Java 8 · Spring 2.7.5  │          └─────────┘
-│                    │                         │ 기록의 주인, 인증, 엑셀 │ ───────▶ Redis (토큰, 캐시)
+│                    │                         │ 기록의 주인, 인증, 엑셀 │ ───────▶ Redis (토큰)      
 │                    │                         └───────┬────────▲───────┘
 │                    │              내부 REST          │        │ 내부 REST (콜백)
 │                    │              X-Internal-Key     ▼        │
@@ -57,7 +57,7 @@
 ### 면접 후
 
 ```
-종료 ─▶ backend ─▶ agent finalize ─┬─▶ (즉시) AI 평가 ─▶ 보고서 v1 (LIVE 초안)       ← 신입: 1~2분 안
+종료 ─▶ backend ─▶ agent finalize ─┬─▶ (즉시) AI 평가 ─▶ 보고서 v1 (LIVE 초안)       ← 신입(실시간 기능을 열었을 때): 1~2분 안
                                    └─▶ (뒤에서) 방 전체 음성 사후 STT ─▶ backend 콜백 ─▶ AI 평가 다시
                                          ─▶ 전사 교체 ─▶ 보고서 v2 (REFINED 보정본) ─▶ 음성 폐기
 ```
@@ -79,7 +79,7 @@
 | 화자 판정 방식 | agent `app/speaker/` | 판정기 추가·순서 변경 |
 | 음성 입력(브라우저 마이크 ↔ Knox Teams) | agent 오디오 입력, frontend `audioOwner` | 미확정. Knox가 전사를 주면 STT 단계를 건너뛰는 입력을 더한다 |
 
-## 4. 동시 20개 이상의 방 (신입 공채)
+## 4. 동시 20개 이상의 방 (신입 공채의 실시간 기능을 열었을 때)
 
 | 걱정 | 대응 |
 | --- | --- |
@@ -101,12 +101,12 @@
 - 음성은 agent 밖으로 나가는 곳이 사내 Whisper뿐이다. 기본 설정에서 디스크에 쓰지 않는다.
 - 서비스 간 호출은 `X-Internal-Key`, 브라우저 → agent는 방 입장권(JWT, 5분, 방 id 고정).
 - 비밀값(JWT 키, 내부 키, 모델 API 키, DB 비밀번호)은 환경변수로만 넣는다. 레포의 기본값은 개발용이다.
-- 운영 DB의 개인정보 암호화(KMS)는 아직 적용하지 않았고 꽂을 자리도 없다. backend의 컬럼 변환기로 붙일 계획이다(일정은 [10-roadmap.md](10-roadmap.md) 6주 차).
+- 운영 DB의 개인정보 암호화(KMS)는 아직 적용하지 않았고 꽂을 자리도 없다. backend의 컬럼 변환기로 붙일 계획이다(일정은 [10-roadmap.md](10-roadmap.md) 8주 차).
 
 ## 6. 포트와 실행 순서 (로컬)
 
 | 서비스 | 포트 | 실행 |
 | --- | --- | --- |
 | backend | 8080 | `./gradlew bootRun` (프로파일 `local`: H2, 시드 데이터) |
-| agent | 8000 | `uvicorn app.main:app --port 8000` (fake provider) |
+| agent | 8000 | `.venv/Scripts/python -m uvicorn app.main:app --port 8000` (fake provider). 백엔드와 함께 띄울 때는 환경변수 `BACKEND_MODE=http`를 준다. 기본값은 가짜 백엔드라, 그대로 띄우면 전사와 꼬리질문이 백엔드에 저장되지 않는다(agent `docs/setup.md` 3장) |
 | frontend | 5173 | `npm run dev:api` (또는 백엔드 없이 `npm run dev`) |
