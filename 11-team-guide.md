@@ -35,11 +35,11 @@
 
 | 묶음 | 된 것 | 안 된 것 |
 | --- | --- | --- |
-| 경력(화상) | 면접 전(사전 리포트, 준비된 질문, 페르소나 고르기), 면접 중(전사, 질문과 꼬리질문 나무, 말로 물은 질문 인식), 면접 후(상세 보고서, 평가 의견 초안, 질문 피드백) | 실제 화상 회의에서 소리를 받는 것은 해 본 적이 없다. 채용 시스템에서 일정과 면접위원을 읽는 것은 화면 시안뿐이다 |
+| 경력(화상) | 면접 전(사전 리포트, 준비된 질문, 페르소나(면접관이 고르는 진행 방식) 고르기), 면접 중(전사, 질문과 꼬리질문 나무, 말로 물은 질문 인식), 면접 후(상세 보고서, 평가 의견 초안, 질문 피드백) | 실제 화상 회의에서 소리를 받는 것은 해 본 적이 없다. 채용 시스템에서 일정과 면접위원을 읽는 것은 화면 시안뿐이다 |
 | 신입(대면) | 실시간 기능 잠금(백엔드 설정), 질문 화면, 예상 꼬리질문의 저장과 표시, 평가 입력 | 예상 꼬리질문을 만드는 Agent 단계. 매칭 파일 올리기는 화면 시안뿐이다 |
 | 채용 담당자 | 면접자 목록과 유형 거르기, 엑셀 여러 파일 올리기, 일정 달력, 면접 페르소나 관리, 시스템 상태, AI 참고 평가(관리자만), 운영 현황, AI 품질, 면접관 편차 | 채용·직무 등록 화면, 일정·면접관 바꾸기 화면, AI 모델 바꾸기(화면 시안뿐) |
 | Agent | 면접 종류 두 가지 | 11/18 회의의 나머지: 예상 꼬리질문 만들기, 페르소나와 면접자 유형을 질문에 반영, 확인할 점의 근거 문장, LLM·음성 인식 상태 알리기. 백엔드는 이 값들을 보내거나 받을 준비가 돼 있고 Agent가 무시한다 |
-| 확인 | frontend 린트·테스트·빌드, backend 테스트 39개 | agent 테스트는 외부 PC의 정책 때문에 돌리지 못했다. 사내에서 먼저 돌린다. Oracle, Redis, 리눅스 서버에서 돌려 본 적이 없다 |
+| 확인 | frontend 린트·테스트·빌드, backend 테스트 39개 | 11/18 반영 뒤에는 agent 테스트를 외부 PC의 정책 때문에 돌리지 못했다(그 전의 측정과 확인은 agent 문서에 있다). 사내에서 먼저 돌린다. Oracle, Redis, 리눅스 서버에서 돌려 본 적이 없다 |
 
 - 반영 상태를 항목별로 보려면 [01-scope.md](01-scope.md) 6장, 남은 일은 [09-backlog.md](09-backlog.md) 1장의 "11/18 회의 반영" 표와 2장.
 - 현업의 답을 기다리는 것은 [05-open-questions.md](05-open-questions.md), 현업에 어렵다고 말할 것은 [15-feasibility.md](15-feasibility.md).
@@ -73,7 +73,7 @@
 
 | 자리 | 맡는 흐름 | 주로 고치는 곳 | 겸하는 역할 |
 | --- | --- | --- | --- |
-| A | 데이터와 운영(등록, 매칭 파일, 채용 시스템 연결, 일정, 관리 화면) | 백엔드, 관리 화면 | 머지 담당 |
+| A | 데이터와 운영(등록, 매칭 파일, 채용 시스템 연결, 일정, 관리 화면) | 백엔드, 관리 화면 | 병합 담당 |
 | B | AI와 실시간(전사, 화자, 꼬리질문, 보고서) | Agent, 면접 방 | AI 품질 담당 |
 | C | 면접관 화면과 평가(준비, 평가, 보고서 화면) | 프런트엔드, 평가 쪽 백엔드 | 현업 소통·시연 담당 |
 
@@ -81,8 +81,8 @@
 
 | 자리 | 이번 주(3주 차, ~11/20) | 다음 주(4주 차, 11/23~27) | 먼저 읽을 것 |
 | --- | --- | --- | --- |
-| A | 11/18 반영분을 사내 레포에 올리기. Oracle에 스키마 올리기(새 표와 열 포함), Redis 연결 | Oracle·Redis로 전체 흐름 확인. 면접 대상자 엑셀 샘플을 받으면 올려 보기 | backend `docs/database.md`, `docs/excel-upload.md`, [08-import-checklist.md](08-import-checklist.md) 3장 |
-| B | 사내 LLM·Whisper에 접속되는지 확인. agent 테스트 돌리기 | 사내 LLM으로 사전 리포트 만들기. Agent에 예상 꼬리질문 만들기, 페르소나와 면접자 유형 반영 | agent `docs/providers.md`, `docs/prompts.md`, `docs/open-questions.md`, API 명세 4.1 |
+| A | 11/18 반영분을 사내 레포에 올리기. Oracle에 스키마 올리기(새 표와 열 포함), Redis 연결 | Oracle·Redis로 전체 흐름 확인. 임시 로그인. 면접 대상자 엑셀 샘플을 받으면 올려 보기. 보안 7 · 9 · 13번: 사내 개발 서버의 키를 환경변수로, 임시 로그인을 열면 접속할 수 있는 곳 제한, HTTPS와 WebSocket 설정 확인([10-roadmap.md](10-roadmap.md) 3장의 "보안에서 할 일") | backend `docs/database.md`, `docs/excel-upload.md`, [08-import-checklist.md](08-import-checklist.md) 3장 |
+| B | 사내 LLM·Whisper에 접속되는지 확인. Agent 문서를 11/18 반영 상태로 맞추기. agent 테스트 돌리기 | 사내 LLM으로 사전 리포트 만들기. Agent에 예상 꼬리질문 만들기, 페르소나와 면접자 유형 반영. 보안 7 · 8 · 10번: Agent에 개발용 기본 키 검사, API 문서 화면 끄기, 사내 AI에 자료를 보내도 되는지 확인([10-roadmap.md](10-roadmap.md) 3장의 "보안에서 할 일") | agent `docs/providers.md`, `docs/prompts.md`, `docs/open-questions.md`, API 명세 4.1 |
 | C | 4주 차 목업 확인. 1단계 범위 자료와 [15-feasibility.md](15-feasibility.md) 다듬기. 현업에 받을 자료 다시 요청 | 11/25 회의 시연과 1단계 범위 합의. 회의 의견을 [09-backlog.md](09-backlog.md)에 적기 | frontend `docs/setup.md`의 "주차별 목업", [05-open-questions.md](05-open-questions.md) |
 
 - 리뷰는 영역이 다른 사람이 본다. → [10-roadmap.md](10-roadmap.md) 4장
@@ -128,7 +128,7 @@ dev에서 작업 브랜치를 딴다 → 고친다 → 확인 명령 통과 → 
 5. **녹음을 임의로 저장하지 않는다.** 기본은 메모리에만 두고 사후 정리 뒤 버린다. 디버깅용으로도 디스크에 쓰지 않는다.
 6. **AI가 합격·불합격을 정하게 하지 않는다.** AI 점수와 면접관 점수를 합산하지 않는다. AI 참고 평가는 관리자만 본다.
 7. **스택을 바꾸지 않는다.** frontend는 JavaScript(타입스크립트 아님), backend는 Java 8 문법과 `javax.*`, 네이티브 SQL 금지. 사내에는 인터넷이 없어 새 의존성은 사내 미러에 있는지부터 확인한다.
-8. **여러 사람이 같이 건드리는 파일은 한 줄 추가만 한다.** frontend의 `router/index.js`, `api/index.js`, `mocks/server.js`, `lib/labels.js`, `AppShell.vue`, backend의 `application.yml`·`build.gradle`·`SecurityConfig`·`LocalSeedRunner`·`excel-mapping.yml`·`schema.sql`, agent의 `container.py`·`providers/registry.py`·`providers/fake_responses.py`·`settings/sections.py`·README의 환경변수 표다. 기존 줄의 순서나 포맷을 바꾸지 않는다. → [06-collaboration.md](06-collaboration.md) 3장
+8. **여러 사람이 같이 건드리는 파일은 한 줄 추가만 한다.** frontend의 `router/index.js`, `api/index.js`, `mocks/server.js`, `lib/labels.js`, `AppShell.vue`, backend의 `application.yml`·`build.gradle`·`SecurityConfig`·`LocalSeedRunner`·`excel-mapping.yml`·`schema.sql`·`AGENTS.md`, agent의 `container.py`·`providers/registry.py`·`providers/fake_responses.py`·`settings/sections.py`·README의 환경변수 표다. 기존 줄의 순서나 포맷을 바꾸지 않는다. backend의 파일들은 다른 변경과 섞지 않고 작은 PR로 먼저 합치고, `schema.sql`은 손으로 고치지 않고 다시 만든다. → [06-collaboration.md](06-collaboration.md) 3장
 
 레포별 금지 사항 전체는 각 레포 `AGENTS.md`에 있다.
 
@@ -162,7 +162,7 @@ dev에서 작업 브랜치를 딴다 → 고친다 → 확인 명령 통과 → 
 ## 9. 목업과 주차별 기능
 
 - 현업 시연은 서버 없이 여는 목업(HTML 한 파일)으로 한다. 3~11주 차 회의용이 주차마다 하나씩 있다(`2026-w47` ~ `2027-w02`). 주차가 올라갈수록 보이는 화면이 늘어난다: 4주 차에 11/18 회의 반영, 6주 차 운영 현황, 7주 차 AI 품질, 8주 차 면접관 편차. 5·9·10·11주 차는 새 화면이 없다.
-- 코드는 한 벌이다. 기능은 모두 들어 있고, 주차별 목업에서만 그 주차에 보여 줄 것을 켠다. 개발 서버와 실제 배포에서는 전부 보인다(API 명세에 없는 화면 시안인 AI 모델 바꾸기만 가짜 데이터로 돌 때 보인다).
+- 코드는 한 벌이다. 기능은 모두 들어 있고, 주차별 목업에서만 그 주차에 보여 줄 것을 켠다. 개발 서버와 실제 배포에서는 전부 보인다(API 명세에 없는 화면 시안인 AI 모델 바꾸기, 매칭 파일 올리기, 채용 시스템에서 불러오기만 가짜 데이터로 돌 때 보인다).
 - **프런트에 화면이나 기능을 더하면** 몇 주 차 목업부터 보일지 정한다: `src/lib/features.js`에 주차를 적고, `src/mocks/changelog.js`의 그 주차에 한 줄 적는다. 정하지 않으면 3주 차 목업부터 보인다.
 - 이미 회의에서 보여 준 주차의 변경 요약은 고치지 않는다. 아직 보여 주지 않은 주차는 그 주의 일이 정해지면 고쳐서 다시 빌드한다.
 - 다시 만들기: frontend에서 `npm run build:demo`. → frontend `docs/setup.md`의 "주차별 목업"

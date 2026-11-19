@@ -42,7 +42,7 @@
 ```
 엑셀 ─▶ backend upload ─▶ 행 검증 · 블라인드 컬럼 제거 ─▶ 면접자 저장 (실패 행은 오류 목록)
                                    │
-자동 매칭 ─▶ 면접 + 면접관 배정 ─▶ 브리핑 작업(AiJob) ─▶ agent /briefings ─▶ 요약 · 질문 저장
+자동 매칭 ─▶ 면접 + 면접관 배정 ─▶ 브리핑(사전 리포트) 작업(AiJob) ─▶ agent /briefings ─▶ 요약 · 질문 저장
 ```
 
 ### 면접 중
@@ -71,7 +71,7 @@
 | DB | backend `application-<profile>.yml` | 프로파일 전환. 엔티티·쿼리는 그대로 |
 | Redis (단일 ↔ Sentinel) | backend·agent 설정 | 설정만 |
 | 인증(개발용 ↔ AD SSO) | backend `auth`, frontend 로그인 화면 | `AuthProvider` 구현 추가 |
-| 면접자 데이터 통로(엑셀 ↔ API) | backend `CandidateSource` | 구현 추가. 저장 로직은 공용 |
+| 면접자 데이터 통로(엑셀 ↔ 채용 시스템의 읽기 전용 DB 테이블) | backend `CandidateSource` | 구현 추가. 저장 로직은 공용. 경력은 채용 시스템의 읽기 전용 DB 테이블에서 읽기로 했다(11/18 회의. 받은 것은 아직 없다. 지금 코드의 자리는 API용 변환 클래스다) |
 | 엑셀 컬럼 | backend `excel-mapping.yml` | 설정만 |
 | 블라인드·금지 질문 기준 | backend `excel-mapping.yml`(컬럼), agent `config/blind_rules.yaml`(주제·표현) | 설정만 |
 | 면접관 매칭 방식 | backend `InterviewerMatcher` | 구현 추가 |
